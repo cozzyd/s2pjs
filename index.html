@@ -1,0 +1,25 @@
+<html>
+  <head> 
+    <title> s2pjs </title> 
+    <script type="text/javascript" src="https://root.cern/js/latest/scripts/JSRootCore.js?2d"></script>
+    <script type="text/javascript" src="s2p.js"></script>
+    <style>
+      .c
+      {
+        width: 80%;
+        height: 400px; 
+      }
+    </style>
+  </head>
+
+  <body>
+    <p> Paste the S2P file here: <br>
+    <textarea id="s2pfile" rows=20 cols = 80> </textarea> 
+    <br><input type="button" value="Plot!" onClick='S2PPlot("s2pfile","cmag","cphase","cdelay")' > 
+    <div id="cmag" class="c"></div> 
+    <div id="cphase" class="c"></div> 
+    <div id="cdelay" class="c"></div> 
+
+  </body> 
+
+</html>
