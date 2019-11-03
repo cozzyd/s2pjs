@@ -185,7 +185,7 @@ function S2PFile(txt)
 
   for (var i = 0; i < lines.length; i++) 
   {
-    lines[i].trim(); 
+    lines[i] = lines[i].trim(); 
     if (lines[i][0]=="!")
     {
       this.comment += lines[i] + "\n"; 
