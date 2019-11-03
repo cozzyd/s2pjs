@@ -265,8 +265,8 @@ function S2PFile(txt)
     {
        for (var i = 0; i < this.freq.length; i++) 
        {
-          var mag  = Math.pow(10, this[elem]["MAGDB"]/20);
-          var ang = this[elem]["PHASE"]*Math.PI/180;
+          var mag  = Math.pow(10, this[elem]["MAGDB"][i]/20);
+          var ang = this[elem]["PHASE"][i]*Math.PI/180;
           this[elem]["MAG"][i] =mag; 
           this[elem]["REAL"][i] = mag*Math.cos(ang);
           this[elem]["IMAG"][i] = mag*Math.sin(ang);
@@ -276,8 +276,8 @@ function S2PFile(txt)
     {
       for (var i = 0; i < this.freq.length; i++) 
        {
-          var mag  =this[elem]["MAG"]; 
-          var ang = this[elem]["PHASE"]*Math.PI/180;
+          var mag  =this[elem]["MAG"][i]; 
+          var ang = this[elem]["PHASE"][i]*Math.PI/180;
           this[elem]["MAGDB"][i] =20*Math.log10(mag); 
           this[elem]["REAL"][i] = mag*Math.cos(ang);
           this[elem]["IMAG"][i] = mag*Math.sin(ang);
@@ -287,8 +287,8 @@ function S2PFile(txt)
     {
       for (var i = 0; i < this.freq.length; i++) 
        {
-          var real  =this[elem]["REAL"]; 
-          var imag  =this[elem]["IMAG"]; 
+          var real  =this[elem]["REAL"][i]; 
+          var imag  =this[elem]["IMAG"][i]; 
           var mag = sqrt(real*real+imag*imag); 
           this[elem]["MAGDB"][i] =20*Math.log10(mag); 
           this[elem]["MAG"][i] =mag;
