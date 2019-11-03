@@ -102,8 +102,8 @@ function S2PPlot(elem_in, elem_mag, elem_phase, elem_delay, elem_vswr, insertion
   }
 
   mg_mag = do_plot(elem_mag, "MAGDB","Magnitude", "dB"); 
-  mg_phase = do_plot(elem_phase, "PHASE","Phase", "Degrees",insertion_only_for_phase ?  1 : 0); 
-  mg_delay = do_plot(elem_delay, "GRPDELAY","Group Delay", f.timeUnits,insertion_only_for_phase ? 1 : 0); 
+  mg_phase = do_plot(elem_phase, "PHASE","Phase", "Degrees",insertion_only_for_phase ?  0 : 1); 
+  mg_delay = do_plot(elem_delay, "GRPDELAY","Group Delay", f.timeUnits,insertion_only_for_phase ? 0 : 1); 
   mg_vswr = do_plot(elem_vswr, "VSWR","VSWR","VSWR", -1); 
 
 
@@ -196,12 +196,12 @@ function S2PFile(txt)
 
       var vswr = []; 
       var mag = this[element]["MAG"]; 
-      console.log(mag); 
+//      console.log(mag); 
       for (var i = 0; i < this.freq.length; i++) 
       {
         vswr.push ( (1 + mag[i])/(1-mag[i])); 
       }
-      console.log(vswr); 
+//      console.log(vswr); 
 
       var g = JSROOT.CreateTGraph(this.freq.length, this.freq, vswr); 
       g.fTitle = "VSWR " + elem.slice(1); 
