@@ -15,6 +15,7 @@ const S2P_Parameter
   REAL : "REAL", 
   IMAG : "IMAG", 
   GRPDELAY : "GRPDELAY", 
+  VSWR : "VSWR", 
 };
 
 function makeLegend(xlow,xhigh,ylow,yhigh, objs)
@@ -46,9 +47,10 @@ f = null;
 mg_mag = null;
 mg_phase = null;
 mg_delay = null;
+mg_vswr = null; 
 JSROOT.gStyle.Palette=55; 
 
-function S2PPlot(elem_in, elem_mag, elem_phase, elem_delay, insertion_only_for_phase) 
+function S2PPlot(elem_in, elem_mag, elem_phase, elem_delay, elem_vswr, insertion_only_for_phase) 
 {
 
   f = new S2PFile(document.getElementById(elem_in).value); 
@@ -57,16 +59,22 @@ function S2PPlot(elem_in, elem_mag, elem_phase, elem_delay, insertion_only_for_p
     JSROOT.cleanup(elem_mag); 
     JSROOT.cleanup(elem_phase); 
     JSROOT.cleanup(elem_delay); 
+    JSROOT.cleanup(elem_vswr); 
   }
 
-  var do_plot = function(div, plotme, title, ytitle, no_reflect = false) 
+  var do_plot = function(div, plotme, title, ytitle, directions = 0 )
   {
     if (div == null) return null; 
 
     var graphs = []; 
-    if (no_reflect) 
+    if (directions == 1) 
     {
      graphs = [ f.makeGraph(S2P_Element.S21,plotme), f.makeGraph(S2P_Element.S12,plotme) ] ;
+    }
+    else if (directions == -1) 
+    {
+     graphs = [ f.makeGraph(S2P_Element.S11,plotme), f.makeGraph(S2P_Element.S22,plotme) ] ;
+
     }
     else
     {
@@ -94,8 +102,9 @@ function S2PPlot(elem_in, elem_mag, elem_phase, elem_delay, insertion_only_for_p
   }
 
   mg_mag = do_plot(elem_mag, "MAGDB","Magnitude", "dB"); 
-  mg_phase = do_plot(elem_phase, "PHASE","Phase", "Degrees",!insertion_only_for_phase); 
-  mg_delay = do_plot(elem_delay, "GRPDELAY","Group Delay", f.timeUnits,!insertion_only_for_phase); 
+  mg_phase = do_plot(elem_phase, "PHASE","Phase", "Degrees",insertion_only_for_phase ?  1 : 0); 
+  mg_delay = do_plot(elem_delay, "GRPDELAY","Group Delay", f.timeUnits,insertion_only_for_phase ? 1 : 0); 
+  mg_vswr = do_plot(elem_vswr, "VSWR","VSWR","VSWR", -1); 
 
 
   first_plot = false; 
@@ -127,6 +136,8 @@ function S2PFile(txt)
   this.makeGraph = function(element, parameter) 
   {
     
+
+
     if (parameter == "GRPDELAY") 
     {
       var unwrapped = this[element]["PHASE"].slice(0); 
@@ -174,6 +185,30 @@ function S2PFile(txt)
       g.fName=element;
       g.InvertBit(JSROOT.BIT(18));
       return g; 
+    }
+    else if(parameter == "VSWR") 
+    {
+      if (element!="S11" && element!="S22") 
+      {
+        console.log("VSWR only makes sense for S11 or S22!"); 
+        return null; 
+      }
+
+      var vswr = []; 
+      var mag = this[element]["MAG"]; 
+      console.log(mag); 
+      for (var i = 0; i < this.freq.length; i++) 
+      {
+        vswr.push ( (1 + mag[i])/(1-mag[i])); 
+      }
+      console.log(vswr); 
+
+      var g = JSROOT.CreateTGraph(this.freq.length, this.freq, vswr); 
+      g.fTitle = "VSWR " + elem.slice(1); 
+      g.fName = elem.slice(1); 
+      g.InvertBit(JSROOT.BIT(18));
+      return g; 
+
     }
     else
     {

@@ -15,10 +15,11 @@
   <body>
     <p> Paste the S2P file here: <br>
     <textarea id="s2pfile" rows=20 cols = 160> </textarea> 
-    <br><input type="button" value="Plot!" onClick='S2PPlot("s2pfile","cmag","cphase","cdelay",document.getElementById("insertion_only_phase").checked)' >  <input type=checkbox id="insertion_only_phase"> Show S11/S22 for phase/group delay
+    <br><input type="button" value="Plot!" onClick='S2PPlot("s2pfile","cmag","cphase","cdelay","cvswr", document.getElementById("insertion_only_phase").checked)' >  <input type=checkbox id="insertion_only_phase"> Show S11/S22 for phase/group delay
     <div id="cmag" class="c"></div> 
     <div id="cphase" class="c"></div> 
     <div id="cdelay" class="c"></div> 
+    <div id="cvswr" class="c"></div> 
 
   </body> 
 
