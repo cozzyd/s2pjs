@@ -26,8 +26,6 @@ function makeLegend(xlow,xhigh,ylow,yhigh, objs)
       leg.fX2NDC = xhigh;
       leg.fY1NDC = ylow;
       leg.fY2NDC = yhigh;
-      leg.fFillStyle=1001;
-      leg.fFillColor=14;
       leg.fNColumns = objs.length > 12 ? 4 : objs.length > 8 ? 3 : objs.length > 3 ? 2 : 1;
 
       for (var i = 0; i < objs.length; i++)
@@ -35,7 +33,7 @@ function makeLegend(xlow,xhigh,ylow,yhigh, objs)
         var entry = JSROOT.Create("TLegendEntry");
         entry.fObject=objs[i];
         entry.fLabel=objs[i].fTitle;
-        entry.fOption="l";
+        entry.fOption="lp";
         leg.fPrimitives.arr.push(entry);
       }
 
@@ -48,30 +46,41 @@ f = null;
 mg_mag = null;
 mg_phase = null;
 mg_delay = null;
-function S2PPlot(elem_in, elem_mag, elem_phase, elem_delay) 
+JSROOT.gStyle.Palette=55; 
+
+function S2PPlot(elem_in, elem_mag, elem_phase, elem_delay, insertion_only_for_phase) 
 {
 
   f = new S2PFile(document.getElementById(elem_in).value); 
   if (!first_plot)
   {
-    JSROOT.clear(elem_mag); 
-    JSROOT.clear(elem_phase); 
-    JSROOT.clear(elem_delay); 
+    JSROOT.cleanup(elem_mag); 
+    JSROOT.cleanup(elem_phase); 
+    JSROOT.cleanup(elem_delay); 
   }
 
-  var do_plot = function(div, plotme, title, ytitle) 
+  var do_plot = function(div, plotme, title, ytitle, no_reflect = false) 
   {
     if (div == null) return null; 
 
-    var graphs = [ 
-      f.makeGraph(S2P_Element.S11,plotme), f.makeGraph(S2P_Element.S12,plotme), 
-      f.makeGraph(S2P_Element.S21,plotme), f.makeGraph(S2P_Element.S22,plotme) ];
+    var graphs = []; 
+    if (no_reflect) 
+    {
+     graphs = [ f.makeGraph(S2P_Element.S21,plotme), f.makeGraph(S2P_Element.S12,plotme) ] ;
+    }
+    else
+    {
+      graphs = [ f.makeGraph(S2P_Element.S11,plotme), f.makeGraph(S2P_Element.S12,plotme), 
+                 f.makeGraph(S2P_Element.S21,plotme), f.makeGraph(S2P_Element.S22,plotme) ];
+    }
 
     var mg = JSROOT.CreateTMultiGraph.apply(0,graphs); 
     mg.fTitle = title; 
     JSROOT.draw(div, mg, "a plc pmc", function(p)
       {
         var hist = p.firstpainter.GetHisto(); 
+        p.root_pad().fGridx=1;
+        p.root_pad().fGridy=1;
         hist.fXaxis.fTitle = f.freqUnits; 
         hist.fYaxis.fTitle = ytitle; 
         JSROOT.redraw(p.divid, hist,"", function(p) 
@@ -85,8 +94,8 @@ function S2PPlot(elem_in, elem_mag, elem_phase, elem_delay)
   }
 
   mg_mag = do_plot(elem_mag, "MAGDB","Magnitude", "dB"); 
-  mg_phase = do_plot(elem_phase, "PHASE","Phase", "Degrees"); 
-  mg_delay = do_plot(elem_delay, "GRPDELAY","Group Delay", f.timeUnits); 
+  mg_phase = do_plot(elem_phase, "PHASE","Phase", "Degrees",!insertion_only_for_phase); 
+  mg_delay = do_plot(elem_delay, "GRPDELAY","Group Delay", f.timeUnits,!insertion_only_for_phase); 
 
 
   first_plot = false; 
@@ -176,6 +185,7 @@ function S2PFile(txt)
 
   for (var i = 0; i < lines.length; i++) 
   {
+    lines[i].trim(); 
     if (lines[i][0]=="!")
     {
       this.comment += lines[i] + "\n"; 
