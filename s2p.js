@@ -172,6 +172,7 @@ function S2PFile(txt)
       var g = JSROOT.CreateTGraph(this.freq.length, this.freq, delay); 
       g.fTitle=element + " " + parameter ;
       g.fName=element;
+      g.InvertBit(JSROOT.BIT(18));
       return g; 
     }
     else
@@ -179,6 +180,7 @@ function S2PFile(txt)
       var g = JSROOT.CreateTGraph(this.freq.length, this.freq, this[element][parameter]); 
       g.fTitle=element + " " + parameter ; 
       g.fName=element;
+      g.InvertBit(JSROOT.BIT(18));
       return g; 
     }
   }
