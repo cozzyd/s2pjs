@@ -209,7 +209,8 @@ function S2PFile(txt)
     }
 
 
-    var tokens = lines[i].split("\t"); 
+    var tokens = lines[i].split(/\s+/); 
+    console.log(tokens); 
     if (tokens.length != 9) continue; 
     this.freq.push(parseFloat(tokens[0]));
     if (this.type == "DB")
