@@ -204,8 +204,8 @@ function S2PFile(txt)
 //      console.log(vswr); 
 
       var g = JSROOT.CreateTGraph(this.freq.length, this.freq, vswr); 
-      g.fTitle = "VSWR " + elem.slice(1); 
-      g.fName = elem.slice(1); 
+      g.fTitle = "VSWR " + element.slice(1); 
+      g.fName = element.slice(1); 
       g.InvertBit(JSROOT.BIT(18));
       return g; 
 
