@@ -159,17 +159,17 @@ function S2PFile(txt)
       var delay = []; 
       delay[0] = 0; 
       var mult = 1; 
-      if (this.freqUnits == "MHz") 
+      if (this.freqUnits == "MHz" || this.freqUnits == "MHZ") 
       {
         mult = 1e-3;
       }
 
-      if (this.freqUnits == "kHz")
+      if (this.freqUnits == "kHz" || this.freqUnits == "KHZ")
       {
         timeUnits = "ms"; 
       }
 
-      if (this.freqUnits == "Hz")
+      if (this.freqUnits == "Hz" || this.freqUnits == "HZ")
       {
         timeUnits = "s"; 
       }
