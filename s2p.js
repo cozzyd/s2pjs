@@ -171,7 +171,7 @@ function S2PFile(txt)
 
       if (this.freqUnits == "Hz" || this.freqUnits == "HZ")
       {
-        timeUnits = "s"; 
+        mult = 1e-9; 
       }
 
 
