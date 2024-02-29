@@ -231,7 +231,9 @@ function S2PFile(txt)
 
     if (lines[i][0] == "#") 
     {
-      var tokens = lines[i].split(" "); 
+      
+      var tokens = lines[i].split(/[ \t]+/); 
+      console.log(tokens); 
       this.freqUnits = tokens[1]; 
       if (tokens[2] != "S") 
       {
